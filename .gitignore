@@ -4,6 +4,31 @@
 # Markdown files
 *.md
 
+# WordPress core (managed separately)
+web/wp-admin/
+web/wp-includes/
+web/wp-*.php
+web/index.php
+web/license.txt
+web/readme.html
+web/xmlrpc.php
+web/wp-config-sample.php
+
+# WordPress uploads
+web/wp-content/uploads/
+
+# WordPress caches
+web/wp-content/cache/
+
+# WordPress plugins (we develop our own)
+web/wp-content/plugins/*
+
+# WordPress themes (keep only our custom ones)
+web/wp-content/themes/twenty*/
+
+# Our plugin (tracked separately)
+!web/wp-content/plugins/wp-intelligence/
+
 # Confidential / sensitive
 .env
 .env.*
@@ -34,3 +59,14 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Composer
+vendor/
+composer.lock
+
+# Node
+node_modules/
+
+# Build artifacts
+dist/
+build/
