@@ -1,0 +1,36 @@
+# DDEV
+.ddev/
+
+# Markdown files
+*.md
+
+# Confidential / sensitive
+.env
+.env.*
+*.key
+*.pem
+*.secret
+*.credentials
+
+# AI-related files (NEVER commit)
+*ai*
+*openai*
+*gemini*
+*claude*
+*chatgpt*
+prompts/
+*api_key*
+*apikey*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
