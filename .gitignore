@@ -27,7 +27,7 @@ web/wp-content/plugins/*
 web/wp-content/themes/twenty*/
 
 # Our plugin (tracked separately)
-!web/wp-content/plugins/wp-intelligence/
+!web/wp-content/plugins/veyra/
 
 # Confidential / sensitive
 .env

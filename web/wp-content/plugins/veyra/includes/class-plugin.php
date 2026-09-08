@@ -2,12 +2,12 @@
 /**
  * Plugin Orchestrator
  *
- * @package WP_Intelligence
+ * @package Veyra
  */
 
 defined('ABSPATH') || exit;
 
-class WP_Intelligence_Plugin {
+class Veyra_Plugin {
 
     private static $instance = null;
     private $db = null;
@@ -28,22 +28,22 @@ class WP_Intelligence_Plugin {
     }
 
     public static function activate() {
-        require_once WP_INTELLIGENCE_DIR . 'includes/class-installer.php';
-        $installer = new WP_Intelligence_Installer();
+        require_once VEYRA_DIR . 'includes/class-installer.php';
+        $installer = new Veyra_Installer();
         $installer->install();
     }
 
     public static function deactivate() {
-        wp_clear_scheduled_hook('wpi_daily_scan');
-        wp_clear_scheduled_hook('wpi_hourly_health_check');
-        wp_clear_scheduled_hook('wpi_cleanup_logs');
+        wp_clear_scheduled_hook('veyra_daily_scan');
+        wp_clear_scheduled_hook('veyra_hourly_health_check');
+        wp_clear_scheduled_hook('veyra_cleanup_logs');
 
         $transients = array(
-            'wpi_health_score',
-            'wpi_scan_status',
-            'wpi_recent_events',
-            'wpi_plugin_scan',
-            'wpi_theme_scan',
+            'veyra_health_score',
+            'veyra_scan_status',
+            'veyra_recent_events',
+            'veyra_plugin_scan',
+            'veyra_theme_scan',
         );
         foreach ($transients as $t) {
             delete_transient($t);
@@ -52,15 +52,15 @@ class WP_Intelligence_Plugin {
 
     private function init() {
         $this->load_dependencies();
-        $this->db          = new WP_Intelligence_Database();
-        $this->settings    = new WP_Intelligence_Settings();
-        $this->logger      = new WP_Intelligence_Logger();
-        $this->security    = new WP_Intelligence_Security();
-        $this->capabilities = new WP_Intelligence_Capabilities();
+        $this->db          = new Veyra_Database();
+        $this->settings    = new Veyra_Settings();
+        $this->logger      = new Veyra_Logger();
+        $this->security    = new Veyra_Security();
+        $this->capabilities = new Veyra_Capabilities();
 
         if (is_admin()) {
-            require_once WP_INTELLIGENCE_DIR . 'admin/class-admin.php';
-            new WP_Intelligence_Admin();
+            require_once VEYRA_DIR . 'admin/class-admin.php';
+            new Veyra_Admin();
         }
     }
 
@@ -72,9 +72,10 @@ class WP_Intelligence_Plugin {
             'includes/class-security.php',
             'includes/class-capabilities.php',
             'includes/class-encryption.php',
+            'includes/class-ai-safety.php',
         );
         foreach ($files as $file) {
-            $path = WP_INTELLIGENCE_DIR . $file;
+            $path = VEYRA_DIR . $file;
             if (file_exists($path)) {
                 require_once $path;
             }

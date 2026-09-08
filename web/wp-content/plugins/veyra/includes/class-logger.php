@@ -2,12 +2,12 @@
 /**
  * Structured Logger
  *
- * @package WP_Intelligence
+ * @package Veyra
  */
 
 defined('ABSPATH') || exit;
 
-class WP_Intelligence_Logger {
+class Veyra_Logger {
 
     const DEBUG    = 'debug';
     const INFO     = 'info';
@@ -25,7 +25,7 @@ class WP_Intelligence_Logger {
     );
 
     public function __construct() {
-        $this->min_level = get_option('wp_intelligence_log_level', 'warning');
+        $this->min_level = get_option('veyra_log_level', 'warning');
     }
 
     public function log($level, $message, $context = array()) {
@@ -68,7 +68,7 @@ class WP_Intelligence_Logger {
 
     private function store($level, $message, $context) {
         global $wpdb;
-        $table = $wpdb->prefix . 'wpi_events';
+        $table = $wpdb->prefix . 'veyra_events';
         $result = $wpdb->insert(
             $table,
             array(
@@ -103,7 +103,7 @@ class WP_Intelligence_Logger {
 
     public function get_logs($args = array()) {
         global $wpdb;
-        $table = $wpdb->prefix . 'wpi_events';
+        $table = $wpdb->prefix . 'veyra_events';
         $defaults = array(
             'level'     => '',
             'date_from' => '',
@@ -151,14 +151,14 @@ class WP_Intelligence_Logger {
     public function get_log($id) {
         global $wpdb;
         return $wpdb->get_row($wpdb->prepare(
-            "SELECT * FROM {$wpdb->prefix}wpi_events WHERE id = %d AND event_type = 'log'",
+            "SELECT * FROM {$wpdb->prefix}veyra_events WHERE id = %d AND event_type = 'log'",
             absint($id)
         ));
     }
 
     public function count_logs($args = array()) {
         global $wpdb;
-        $table = $wpdb->prefix . 'wpi_events';
+        $table = $wpdb->prefix . 'veyra_events';
         $where = array("event_type = 'log'");
         $values = array();
         if (!empty($args['level'])) {
@@ -179,31 +179,31 @@ class WP_Intelligence_Logger {
     public function cleanup($retention_days = null) {
         global $wpdb;
         if (null === $retention_days) {
-            $retention_days = (int) get_option('wp_intelligence_retention_period', 90);
+            $retention_days = (int) get_option('veyra_retention_period', 90);
         }
         if ($retention_days <= 0) {
             return 0;
         }
         $date = gmdate('Y-m-d H:i:s', strtotime("-{$retention_days} days"));
         return $wpdb->query($wpdb->prepare(
-            "DELETE FROM {$wpdb->prefix}wpi_events WHERE event_type = 'log' AND created_at < %s",
+            "DELETE FROM {$wpdb->prefix}veyra_events WHERE event_type = 'log' AND created_at < %s",
             $date
         ));
     }
 
     public function get_oldest_log_date() {
         global $wpdb;
-        return $wpdb->get_var("SELECT MIN(created_at) FROM {$wpdb->prefix}wpi_events WHERE event_type = 'log'");
+        return $wpdb->get_var("SELECT MIN(created_at) FROM {$wpdb->prefix}veyra_events WHERE event_type = 'log'");
     }
 
     public function get_total_log_count() {
         global $wpdb;
-        return (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}wpi_events WHERE event_type = 'log'");
+        return (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}veyra_events WHERE event_type = 'log'");
     }
 
     public function get_log_counts_by_level() {
         global $wpdb;
-        $results = $wpdb->get_results("SELECT severity, COUNT(*) as cnt FROM {$wpdb->prefix}wpi_events WHERE event_type = 'log' GROUP BY severity");
+        $results = $wpdb->get_results("SELECT severity, COUNT(*) as cnt FROM {$wpdb->prefix}veyra_events WHERE event_type = 'log' GROUP BY severity");
         $counts = array_fill_keys(array_keys($this->levels), 0);
         foreach ($results as $r) {
             if (isset($counts[$r->severity])) {
@@ -217,7 +217,7 @@ class WP_Intelligence_Logger {
         global $wpdb;
         $today = current_time('Y-m-d');
         return (int) $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM {$wpdb->prefix}wpi_events WHERE event_type = 'log' AND created_at >= %s",
+            "SELECT COUNT(*) FROM {$wpdb->prefix}veyra_events WHERE event_type = 'log' AND created_at >= %s",
             $today
         ));
     }
@@ -226,7 +226,7 @@ class WP_Intelligence_Logger {
         global $wpdb;
         $yesterday = gmdate('Y-m-d H:i:s', strtotime('-24 hours'));
         $count = $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM {$wpdb->prefix}wpi_events WHERE event_type = 'log' AND severity = 'critical' AND created_at >= %s",
+            "SELECT COUNT(*) FROM {$wpdb->prefix}veyra_events WHERE event_type = 'log' AND severity = 'critical' AND created_at >= %s",
             $yesterday
         ));
         return (int) $count > 0;
@@ -234,22 +234,22 @@ class WP_Intelligence_Logger {
 
     public function get_level_class($level) {
         $classes = array(
-            'debug'    => 'wpi-log-debug',
-            'info'     => 'wpi-log-info',
-            'warning'  => 'wpi-log-warning',
-            'error'    => 'wpi-log-error',
-            'critical' => 'wpi-log-critical',
+            'debug'    => 'veyra-log-debug',
+            'info'     => 'veyra-log-info',
+            'warning'  => 'veyra-log-warning',
+            'error'    => 'veyra-log-error',
+            'critical' => 'veyra-log-critical',
         );
-        return isset($classes[$level]) ? $classes[$level] : 'wpi-log-info';
+        return isset($classes[$level]) ? $classes[$level] : 'veyra-log-info';
     }
 
     public function get_level_label($level) {
         $labels = array(
-            'debug'    => __('Debug', 'wp-intelligence'),
-            'info'     => __('Info', 'wp-intelligence'),
-            'warning'  => __('Warning', 'wp-intelligence'),
-            'error'    => __('Error', 'wp-intelligence'),
-            'critical' => __('Critical', 'wp-intelligence'),
+            'debug'    => __('Debug', 'veyra'),
+            'info'     => __('Info', 'veyra'),
+            'warning'  => __('Warning', 'veyra'),
+            'error'    => __('Error', 'veyra'),
+            'critical' => __('Critical', 'veyra'),
         );
         return isset($labels[$level]) ? $labels[$level] : $level;
     }

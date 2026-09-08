@@ -2,19 +2,19 @@
 /**
  * Plugin Installer
  *
- * @package WP_Intelligence
+ * @package Veyra
  */
 
 defined('ABSPATH') || exit;
 
-class WP_Intelligence_Installer {
+class Veyra_Installer {
 
     public function install() {
         $this->create_tables();
         $this->set_default_options();
         $this->create_capabilities();
         $this->schedule_events();
-        update_option('wp_intelligence_version', WP_INTELLIGENCE_VERSION);
+        update_option('veyra_version', VEYRA_VERSION);
     }
 
     public function create_tables() {
@@ -35,7 +35,7 @@ class WP_Intelligence_Installer {
         $p = $wpdb->prefix;
 
         return array(
-            "{$p}wpi_events" => "CREATE TABLE {$p}wpi_events (
+            "{$p}veyra_events" => "CREATE TABLE {$p}veyra_events (
                 id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                 event_type VARCHAR(100) NOT NULL,
                 object_type VARCHAR(100) DEFAULT '',
@@ -55,7 +55,7 @@ class WP_Intelligence_Installer {
                 KEY created_at (created_at)
             ) $charset_collate;",
 
-            "{$p}wpi_errors" => "CREATE TABLE {$p}wpi_errors (
+            "{$p}veyra_errors" => "CREATE TABLE {$p}veyra_errors (
                 id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                 error_hash VARCHAR(64) NOT NULL,
                 error_type VARCHAR(50) NOT NULL,
@@ -77,7 +77,7 @@ class WP_Intelligence_Installer {
                 KEY last_seen (last_seen)
             ) $charset_collate;",
 
-            "{$p}wpi_insights" => "CREATE TABLE {$p}wpi_insights (
+            "{$p}veyra_insights" => "CREATE TABLE {$p}veyra_insights (
                 id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                 insight_type VARCHAR(100) NOT NULL,
                 metric_key VARCHAR(200) NOT NULL,
@@ -92,7 +92,7 @@ class WP_Intelligence_Installer {
                 KEY created_at (created_at)
             ) $charset_collate;",
 
-            "{$p}wpi_requests" => "CREATE TABLE {$p}wpi_requests (
+            "{$p}veyra_requests" => "CREATE TABLE {$p}veyra_requests (
                 id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                 client_user_id BIGINT(20) UNSIGNED DEFAULT 0,
                 assigned_user_id BIGINT(20) UNSIGNED DEFAULT 0,
@@ -112,7 +112,7 @@ class WP_Intelligence_Installer {
                 KEY created_at (created_at)
             ) $charset_collate;",
 
-            "{$p}wpi_request_comments" => "CREATE TABLE {$p}wpi_request_comments (
+            "{$p}veyra_request_comments" => "CREATE TABLE {$p}veyra_request_comments (
                 id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                 request_id BIGINT(20) UNSIGNED NOT NULL,
                 user_id BIGINT(20) UNSIGNED DEFAULT 0,
@@ -123,7 +123,7 @@ class WP_Intelligence_Installer {
                 KEY request_id (request_id)
             ) $charset_collate;",
 
-            "{$p}wpi_scans" => "CREATE TABLE {$p}wpi_scans (
+            "{$p}veyra_scans" => "CREATE TABLE {$p}veyra_scans (
                 id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                 scan_type VARCHAR(50) NOT NULL,
                 status VARCHAR(50) DEFAULT 'running',
@@ -135,7 +135,7 @@ class WP_Intelligence_Installer {
                 KEY status (status)
             ) $charset_collate;",
 
-            "{$p}wpi_scan_results" => "CREATE TABLE {$p}wpi_scan_results (
+            "{$p}veyra_scan_results" => "CREATE TABLE {$p}veyra_scan_results (
                 id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                 scan_id BIGINT(20) UNSIGNED NOT NULL,
                 category VARCHAR(100) NOT NULL,
@@ -149,7 +149,7 @@ class WP_Intelligence_Installer {
                 KEY category (category)
             ) $charset_collate;",
 
-            "{$p}wpi_ai_logs" => "CREATE TABLE {$p}wpi_ai_logs (
+            "{$p}veyra_ai_logs" => "CREATE TABLE {$p}veyra_ai_logs (
                 id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                 provider VARCHAR(100) DEFAULT '',
                 model VARCHAR(100) DEFAULT '',
@@ -169,20 +169,20 @@ class WP_Intelligence_Installer {
 
     public function set_default_options() {
         $defaults = array(
-            'wp_intelligence_enable_scanner'       => '1',
-            'wp_intelligence_enable_change_recorder' => '1',
-            'wp_intelligence_enable_emergency_doctor' => '1',
-            'wp_intelligence_enable_business_brain' => '1',
-            'wp_intelligence_enable_handover'       => '1',
-            'wp_intelligence_enable_requests'       => '1',
-            'wp_intelligence_scan_frequency'        => 'daily',
-            'wp_intelligence_retention_period'      => '90',
-            'wp_intelligence_log_level'             => 'warning',
-            'wp_intelligence_error_monitoring'      => '1',
-            'wp_intelligence_event_tracking'        => '1',
-            'wp_intelligence_debug_mode'            => '0',
-            'wp_intelligence_enable_caching'        => '1',
-            'wp_intelligence_cache_duration'        => '300',
+            'veyra_enable_scanner'         => '1',
+            'veyra_enable_change_recorder'  => '1',
+            'veyra_enable_emergency_doctor' => '1',
+            'veyra_enable_business_brain'   => '1',
+            'veyra_enable_handover'         => '1',
+            'veyra_enable_requests'         => '1',
+            'veyra_scan_frequency'          => 'daily',
+            'veyra_retention_period'        => '90',
+            'veyra_log_level'               => 'warning',
+            'veyra_error_monitoring'        => '1',
+            'veyra_event_tracking'          => '1',
+            'veyra_debug_mode'              => '0',
+            'veyra_enable_caching'          => '1',
+            'veyra_cache_duration'          => '300',
         );
 
         foreach ($defaults as $key => $value) {
@@ -196,12 +196,12 @@ class WP_Intelligence_Installer {
         $admin = get_role('administrator');
         if ($admin) {
             $caps = array(
-                'manage_wp_intelligence',
-                'view_wp_intelligence',
-                'manage_wp_intelligence_settings',
-                'view_wp_intelligence_logs',
-                'manage_wp_intelligence_requests',
-                'manage_wp_intelligence_diagnostics',
+                'manage_veyra',
+                'view_veyra',
+                'manage_veyra_settings',
+                'view_veyra_logs',
+                'manage_veyra_requests',
+                'manage_veyra_diagnostics',
             );
             foreach ($caps as $cap) {
                 $admin->add_cap($cap);
@@ -210,14 +210,14 @@ class WP_Intelligence_Installer {
     }
 
     public function schedule_events() {
-        if (!wp_next_scheduled('wpi_daily_scan')) {
-            wp_schedule_event(time(), 'daily', 'wpi_daily_scan');
+        if (!wp_next_scheduled('veyra_daily_scan')) {
+            wp_schedule_event(time(), 'daily', 'veyra_daily_scan');
         }
-        if (!wp_next_scheduled('wpi_hourly_health_check')) {
-            wp_schedule_event(time(), 'hourly', 'wpi_hourly_health_check');
+        if (!wp_next_scheduled('veyra_hourly_health_check')) {
+            wp_schedule_event(time(), 'hourly', 'veyra_hourly_health_check');
         }
-        if (!wp_next_scheduled('wpi_cleanup_logs')) {
-            wp_schedule_event(time(), 'daily', 'wpi_cleanup_logs');
+        if (!wp_next_scheduled('veyra_cleanup_logs')) {
+            wp_schedule_event(time(), 'daily', 'veyra_cleanup_logs');
         }
     }
 }

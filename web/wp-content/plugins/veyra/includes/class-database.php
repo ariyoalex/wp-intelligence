@@ -2,12 +2,12 @@
 /**
  * Database Abstraction Layer
  *
- * @package WP_Intelligence
+ * @package Veyra
  */
 
 defined('ABSPATH') || exit;
 
-class WP_Intelligence_Database {
+class Veyra_Database {
 
     private $wpdb;
 
@@ -17,35 +17,35 @@ class WP_Intelligence_Database {
     }
 
     public function events_table() {
-        return $this->wpdb->prefix . 'wpi_events';
+        return $this->wpdb->prefix . 'veyra_events';
     }
 
     public function errors_table() {
-        return $this->wpdb->prefix . 'wpi_errors';
+        return $this->wpdb->prefix . 'veyra_errors';
     }
 
     public function insights_table() {
-        return $this->wpdb->prefix . 'wpi_insights';
+        return $this->wpdb->prefix . 'veyra_insights';
     }
 
     public function requests_table() {
-        return $this->wpdb->prefix . 'wpi_requests';
+        return $this->wpdb->prefix . 'veyra_requests';
     }
 
     public function request_comments_table() {
-        return $this->wpdb->prefix . 'wpi_request_comments';
+        return $this->wpdb->prefix . 'veyra_request_comments';
     }
 
     public function scans_table() {
-        return $this->wpdb->prefix . 'wpi_scans';
+        return $this->wpdb->prefix . 'veyra_scans';
     }
 
     public function scan_results_table() {
-        return $this->wpdb->prefix . 'wpi_scan_results';
+        return $this->wpdb->prefix . 'veyra_scan_results';
     }
 
     public function ai_logs_table() {
-        return $this->wpdb->prefix . 'wpi_ai_logs';
+        return $this->wpdb->prefix . 'veyra_ai_logs';
     }
 
     public function table_exists($table) {
@@ -252,15 +252,15 @@ class WP_Intelligence_Database {
         }
         $now = current_time('mysql');
         $insert = array(
-            'client_user_id'  => absint($data['client_user_id'] ?? 0),
+            'client_user_id'   => absint($data['client_user_id'] ?? 0),
             'assigned_user_id' => absint($data['assigned_user_id'] ?? 0),
-            'title'           => sanitize_text_field($data['title'] ?? ''),
-            'description'     => sanitize_textarea_field($data['description'] ?? ''),
-            'category'        => sanitize_text_field($data['category'] ?? 'other'),
-            'priority'        => sanitize_text_field($data['priority'] ?? 'normal'),
-            'status'          => sanitize_text_field($data['status'] ?? 'new'),
-            'created_at'      => $now,
-            'updated_at'      => $now,
+            'title'            => sanitize_text_field($data['title'] ?? ''),
+            'description'      => sanitize_textarea_field($data['description'] ?? ''),
+            'category'         => sanitize_text_field($data['category'] ?? 'other'),
+            'priority'         => sanitize_text_field($data['priority'] ?? 'normal'),
+            'status'           => sanitize_text_field($data['status'] ?? 'new'),
+            'created_at'       => $now,
+            'updated_at'       => $now,
         );
         $result = $this->wpdb->insert($this->requests_table(), $insert);
         return $result ? $this->wpdb->insert_id : false;
@@ -498,23 +498,23 @@ class WP_Intelligence_Database {
     private function build_where_clause($args, $table) {
         $where = array();
         $map = array(
-            'event_type'      => 'event_type',
-            'object_type'     => 'object_type',
-            'user_id'         => 'user_id',
-            'severity'        => 'severity',
-            'error_type'      => 'error_type',
-            'status'          => 'status',
-            'component'       => 'component',
-            'insight_type'    => 'insight_type',
-            'metric_key'      => 'metric_key',
-            'scan_type'       => 'scan_type',
-            'provider'        => 'provider',
-            'client_user_id'  => 'client_user_id',
+            'event_type'       => 'event_type',
+            'object_type'      => 'object_type',
+            'user_id'          => 'user_id',
+            'severity'         => 'severity',
+            'error_type'       => 'error_type',
+            'status'           => 'status',
+            'component'        => 'component',
+            'insight_type'     => 'insight_type',
+            'metric_key'       => 'metric_key',
+            'scan_type'        => 'scan_type',
+            'provider'         => 'provider',
+            'client_user_id'   => 'client_user_id',
             'assigned_user_id' => 'assigned_user_id',
-            'category'        => 'category',
-            'priority'        => 'priority',
-            'date_from'       => 'created_at >=',
-            'date_to'         => 'created_at <=',
+            'category'         => 'category',
+            'priority'         => 'priority',
+            'date_from'        => 'created_at >=',
+            'date_to'          => 'created_at <=',
         );
         foreach ($map as $key => $column) {
             if (!empty($args[$key]) && isset($args[$key])) {

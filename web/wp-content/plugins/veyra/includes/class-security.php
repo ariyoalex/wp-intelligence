@@ -2,12 +2,12 @@
 /**
  * Security Utilities
  *
- * @package WP_Intelligence
+ * @package Veyra
  */
 
 defined('ABSPATH') || exit;
 
-class WP_Intelligence_Security {
+class Veyra_Security {
 
     public function verify_nonce_action($action, $nonce = null) {
         if (null === $nonce) {
@@ -94,16 +94,16 @@ class WP_Intelligence_Security {
         return filter_var($input, FILTER_VALIDATE_IP) !== false;
     }
 
-    public function check_admin_referer($action = 'wp_intelligence') {
+    public function check_admin_referer($action = 'veyra') {
         check_admin_referer($action);
     }
 
-    public function check_ajax_referer($action = 'wp_intelligence') {
+    public function check_ajax_referer($action = 'veyra') {
         check_ajax_referer($action);
     }
 
     public function check_rate_limit($key, $max_requests = 60, $time_window = 60) {
-        $transient_key = 'wpi_rl_' . md5($key);
+        $transient_key = 'veyra_rl_' . md5($key);
         $current = get_transient($transient_key);
         if (false === $current) {
             return true;
@@ -112,7 +112,7 @@ class WP_Intelligence_Security {
     }
 
     public function increment_rate_limit($key, $time_window = 60) {
-        $transient_key = 'wpi_rl_' . md5($key);
+        $transient_key = 'veyra_rl_' . md5($key);
         $current = get_transient($transient_key);
         if (false === $current) {
             set_transient($transient_key, 1, $time_window);
@@ -123,15 +123,15 @@ class WP_Intelligence_Security {
 
     public function validate_upload($file, $allowed_types = array(), $max_size = 0) {
         if (empty($file) || !is_array($file)) {
-            return array('valid' => false, 'message' => __('No file provided.', 'wp-intelligence'));
+            return array('valid' => false, 'message' => __('No file provided.', 'veyra'));
         }
         if ($file['error'] !== UPLOAD_ERR_OK) {
-            return array('valid' => false, 'message' => __('Upload error occurred.', 'wp-intelligence'));
+            return array('valid' => false, 'message' => __('Upload error occurred.', 'veyra'));
         }
         if (!empty($allowed_types)) {
             $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
             if (!in_array($ext, $allowed_types, true)) {
-                return array('valid' => false, 'message' => __('File type not allowed.', 'wp-intelligence'));
+                return array('valid' => false, 'message' => __('File type not allowed.', 'veyra'));
             }
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mime = finfo_file($finfo, $file['tmp_name']);
@@ -149,11 +149,11 @@ class WP_Intelligence_Security {
                 }
             }
             if (!empty($valid_mimes) && !in_array($mime, $valid_mimes, true)) {
-                return array('valid' => false, 'message' => __('File MIME type not allowed.', 'wp-intelligence'));
+                return array('valid' => false, 'message' => __('File MIME type not allowed.', 'veyra'));
             }
         }
         if ($max_size > 0 && $file['size'] > $max_size) {
-            return array('valid' => false, 'message' => __('File too large.', 'wp-intelligence'));
+            return array('valid' => false, 'message' => __('File too large.', 'veyra'));
         }
         return array('valid' => true, 'message' => '');
     }

@@ -2,19 +2,19 @@
 /**
  * Capabilities Management
  *
- * @package WP_Intelligence
+ * @package Veyra
  */
 
 defined('ABSPATH') || exit;
 
-class WP_Intelligence_Capabilities {
+class Veyra_Capabilities {
 
-    const MANAGE            = 'manage_wp_intelligence';
-    const VIEW              = 'view_wp_intelligence';
-    const MANAGE_SETTINGS   = 'manage_wp_intelligence_settings';
-    const VIEW_LOGS         = 'view_wp_intelligence_logs';
-    const MANAGE_REQUESTS   = 'manage_wp_intelligence_requests';
-    const MANAGE_DIAGNOSTICS = 'manage_wp_intelligence_diagnostics';
+    const MANAGE             = 'manage_veyra';
+    const VIEW               = 'view_veyra';
+    const MANAGE_SETTINGS    = 'manage_veyra_settings';
+    const VIEW_LOGS          = 'view_veyra_logs';
+    const MANAGE_REQUESTS    = 'manage_veyra_requests';
+    const MANAGE_DIAGNOSTICS = 'manage_veyra_diagnostics';
 
     public function install() {
         $admin = get_role('administrator');
@@ -108,8 +108,8 @@ class WP_Intelligence_Capabilities {
         }
         if (!current_user_can($capability)) {
             wp_die(
-                esc_html__('You do not have sufficient permissions to access this page.', 'wp-intelligence'),
-                esc_html__('Access Denied', 'wp-intelligence'),
+                esc_html__('You do not have sufficient permissions to access this page.', 'veyra'),
+                esc_html__('Access Denied', 'veyra'),
                 array('response' => 403)
             );
         }

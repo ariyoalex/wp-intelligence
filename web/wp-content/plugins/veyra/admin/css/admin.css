@@ -1,0 +1,20 @@
+.veyra-wrap { max-width: 1200px; margin-top: 20px; }
+.veyra-page-header { margin-bottom: 24px; }
+.veyra-page-header h1 { font-size: 24px; font-weight: 600; margin: 0 0 4px; }
+.veyra-page-description { color: #646970; margin: 0; font-size: 14px; }
+.veyra-dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.veyra-card { background: #fff; border: 1px solid #c3c4c7; border-radius: 4px; padding: 20px; }
+.veyra-card h2 { font-size: 16px; font-weight: 600; margin: 0 0 16px; padding-bottom: 12px; border-bottom: 1px solid #f0f0f1; }
+.veyra-health-score { text-align: center; padding: 20px 0; }
+.veyra-score-number { display: block; font-size: 48px; font-weight: 700; color: #1d2327; }
+.veyra-score-label { display: block; font-size: 14px; color: #646970; margin-top: 4px; }
+.veyra-empty-text { color: #646970; font-size: 14px; margin: 0; }
+.veyra-empty-state-box { background: #fff; border: 1px solid #c3c4c7; border-radius: 4px; padding: 40px; text-align: center; }
+.veyra-empty-state-box h3 { font-size: 18px; font-weight: 600; margin: 0 0 12px; }
+.veyra-empty-state-box p { color: #646970; font-size: 14px; max-width: 500px; margin: 0 auto; line-height: 1.6; }
+.veyra-error-state { background: #fcf0f1; border: 1px solid #d63638; border-radius: 4px; padding: 20px; }
+.veyra-error-state h3 { color: #d63638; margin: 0 0 8px; }
+.veyra-health-scanning { text-align: center; padding: 20px 0; }
+.veyra-run-scan { margin-top: 16px; }
+.veyra-activity-feed { min-height: 100px; }
+@media (max-width: 782px) { .veyra-dashboard-grid { grid-template-columns: 1fr; } }

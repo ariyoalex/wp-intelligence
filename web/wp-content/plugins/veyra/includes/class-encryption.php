@@ -2,12 +2,12 @@
 /**
  * Encryption Utilities
  *
- * @package WP_Intelligence
+ * @package Veyra
  */
 
 defined('ABSPATH') || exit;
 
-class WP_Intelligence_Encryption {
+class Veyra_Encryption {
 
     private $key;
 
@@ -16,10 +16,10 @@ class WP_Intelligence_Encryption {
     }
 
     public function get_or_create_key() {
-        $key = get_option('wp_intelligence_enc_key', '');
+        $key = get_option('veyra_enc_key', '');
         if (empty($key)) {
             $key = wp_generate_password(32, false);
-            add_option('wp_intelligence_enc_key', $key, false);
+            add_option('veyra_enc_key', $key, false);
         }
         return $key;
     }
